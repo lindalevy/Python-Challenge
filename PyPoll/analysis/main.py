@@ -2,8 +2,6 @@
 # This will allow us to create file paths across operating systems
 import os
 
-import operator
-
 # Module for reading CSV files
 import csv
 # columns in datasheet
@@ -15,8 +13,7 @@ csvpath = os.path.join('..', 'Resources', 'election_data.csv')
 # create lists to use in manipulation to produce outputs
 listvotes = list()   
 candidate_options = list()
-outputdir = {"ocandidate":[], "ovotecounter":[], "opercent":[]}
-outputdir2 = {}
+outputdir = {}
 
 with open(csvpath, "r") as csvfile:
     csvreader = csv.reader(csvfile, delimiter=",")
@@ -24,12 +21,11 @@ with open(csvpath, "r") as csvfile:
     next(csvreader, None)  # skip 
 
     #initial fields and set starting value before commencing reading the rows
-
    
     # Loop through
     for row in csvreader:
 
-        # name the elemtns in the row
+        # name the elemnts in the row
         voterid, county,rowcandidate = row
 
         #create list of candidates
@@ -42,14 +38,12 @@ with open(csvpath, "r") as csvfile:
             candidate_options.append(rowcandidate)
             # And begin tracking that candidate's voter count
             outputdir[rowcandidate] = 0
-            outputdir2[rowcandidate] = 0
+
         # Then add a vote to that candidate's count
         outputdir[rowcandidate] = outputdir[rowcandidate] + 1
-        outputdir2[rowcandidate] = outputdir2[rowcandidate] + 1
-   
+        
     # find winner 
-    winner = max(outputdir2, key= outputdir.get)
-
+    winner = max(outputdir, key= outputdir.get)
 
     #time to create a file and all outcomes to the text file
     newfile= open("myPYPollResults.txt", "w")
@@ -58,10 +52,10 @@ with open(csvpath, "r") as csvfile:
     newfile.write("--------------------\n")
     newfile.write( "   ")
     newfile.write(f"Winner: {winner}\n")
-    newfile.write(" str(outputdir2)\n")
-
-    #for key, value in outputdir2.items():
-    #    newfile.write(key, ' : ', value)
+    
+    newfile.write( "   ")
+    newfile.write("--------------------\n")
+    newfile.writelines('{}:{}\n'.format(k,v) for k, v in outputdir.items()) 
     newfile.write("--------------------------")
 
     newfile.close()
@@ -69,6 +63,8 @@ with open(csvpath, "r") as csvfile:
     #start printing, and put spacing between to make it more readable
     # use this in the print function
     #        vpercent = "{:.3%}".format(vpercent)
+
+    ## I have been unable to figure out in the time how to manage the percentages so this is not included
 
     print ("    ")
     print("Election Results")
@@ -80,8 +76,8 @@ with open(csvpath, "r") as csvfile:
 #   print winner
     print(f"Winner: {winner}")
     print("--------------------------")
-
-    for key, value in outputdir2.items():
+    for key, value in outputdir.items():
         print(key, ' : ', value)
+
     print( "   ")
     print("--------------------------")
