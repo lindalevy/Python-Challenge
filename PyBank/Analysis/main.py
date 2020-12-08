@@ -38,16 +38,17 @@ with open(csvpath, "r") as csvfile:
 
         # calculate outcomes
         totalprofit += profit   
-        totalmonths = len(listdate)
-
-        # reduce month count by 1 as there is no change value for the first entry
-        Amonths = totalmonths - 1
 
         if index > 1:
             profitchange = profit - lastprofit
             listprofit.append(profitchange)
             outputdir.update({row[0]: profitchange})
         lastprofit = profit
+
+    totalmonths = len(listdate)
+
+    # reduce month count by 1 as there is no change value for the first entry
+    Amonths = totalmonths - 1
 
     # reading the directory to return the required information 
     Gdate = max(outputdir, key= outputdir.get)
